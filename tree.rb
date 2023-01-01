@@ -114,6 +114,17 @@ class Tree
     false
   end
 
+  def rebalance(node = root)
+    return if node.nil?
+
+    sorted_arr = []
+    rebalance(node.left)
+    sorted_arr << node.data
+    rebalance(node.right)
+
+    build_tree(sorted_arr)
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -157,10 +168,15 @@ t.pretty_print
 # p t.depth
 p t.balance?
 
-10.times do 
+10.times do
   num = rand(100..110)
   t.insert(num)
 end
 puts '-------'
 t.pretty_print
-p t.balance?
+
+unless t.balance?
+  t.rebalance
+  t.pretty_print
+  puts 'The bts has been balanced'
+end
